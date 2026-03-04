@@ -1,0 +1,51 @@
+{
+  "name": "Shortlistr-Screening-Public",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "REPLACE_WITH_YOUR_PATH",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryPropertyName": "resumes"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_GOOGLE_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": "Sheet1",
+        "columnToMatchOn": "candidate_email",
+        "fieldsUi": {
+          "fieldValues": [
+            { "columnName": "candidate_name", "fieldValue": "={{ $json.candidate_name }}" },
+            { "columnName": "candidate_email", "fieldValue": "={{ $json.candidate_email }}" },
+            { "columnName": "match_score", "fieldValue": "={{ $json.match_score }}" },
+            { "columnName": "summary", "fieldValue": "={{ $json.summary }}" },
+            { "columnName": "status", "fieldValue": "={{ $json.status }}" }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "name": "Append or update row in sheet"
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "seconds"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "name": "Wait (API Quota Protection)"
+    }
+  ]
+}

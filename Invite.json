@@ -1,0 +1,32 @@
+{
+  "name": "Shortlistr-Invite-Public",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "REPLACE_WITH_YOUR_INVITE_PATH",
+        "responseMode": "responseNode"
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "name": "Webhook"
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "REPLACE_WITH_YOUR_CALENDAR_ID",
+          "mode": "list"
+        },
+        "start": "={{ $json.body.interview_time }}",
+        "end": "={{ DateTime.fromISO($json.body.interview_time).plus({ hours: 1 }) }}",
+        "additionalFields": {
+          "attendees": ["={{ $json.body.candidate_email }}"]
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.1,
+      "name": "Create Google Calendar Event"
+    }
+  ]
+}
